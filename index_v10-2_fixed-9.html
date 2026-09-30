@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>TV.PIPICORNI.TO — V10 / 1500 TRANSMISSIONS</title>
+<style>
+:root{--fg:#c9cdd0;--bright:#f0f2f3;--dim:#777e83;--line:#4d5459;--bg:#030405}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#000;color:var(--fg);font-family:Consolas,ui-monospace,monospace}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;background:repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 1px,transparent 1px 4px)}
+body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:91;box-shadow:inset 0 0 160px #000}
+button,input{font:inherit}
+button{background:#101214;color:#d4d7d9;border:1px solid #62686d;padding:9px 11px;cursor:pointer}
+button:hover{background:#1b1e20;color:#fff}
+button:active{transform:translateY(1px)}
+#tv{padding:12px;min-height:100vh}
+.shell{max-width:1180px;margin:auto;background:#070809;border:2px solid #62686b;box-shadow:0 0 70px #000,inset 0 0 90px #000}
+.top{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:12px 15px;border-bottom:1px solid #4d5358}
+.logo{font-size:clamp(18px,3vw,27px);font-weight:900;letter-spacing:3px;text-shadow:2px 0 #555,-2px 0 #888}
+.badge{margin-left:auto;color:#777e84;font-size:11px}
+.screen{padding:15px;min-height:760px}
+.osd{font-size:11px;color:#858b90;letter-spacing:2px;display:flex;justify-content:space-between;gap:10px}
+.progress{height:7px;background:#101214;border:1px solid #41474b;margin:10px 0 14px}
+.bar{height:100%;background:#c8cbcd;width:0}
+#content{min-height:650px}
+.card{border:1px solid #4b5257;background:#080a0b;box-shadow:inset 0 0 35px #000;padding:16px}
+h1{font-size:clamp(18px,4vw,32px);margin:6px 0 12px;color:#dfe1e2}
+.kind{display:inline-block;border:1px solid #62686d;padding:4px 8px;font-size:10px;letter-spacing:1px}
+.clue{white-space:pre-wrap;line-height:1.65;font-size:16px;margin:14px 0;color:#d0d3d5}
+.input{width:100%;background:#020303;border:1px solid #686e73;color:#e6e8e9;padding:13px;font-size:16px}
+.actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
+.msg{min-height:24px;margin-top:10px}
+.ok{color:#dfe2e3}.bad{color:#aaaeb1}
+.dim{color:#72787d;font-size:11px}
+.art{margin-top:14px;border:1px solid #4b5257;background:#000;min-height:230px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.art svg{width:100%;height:260px;display:block}
+.footer{border-top:1px solid #4d5358;padding:9px 14px;color:#70767b;font-size:10px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.social{letter-spacing:1px;color:#a0a4a7}.danger{border-color:#747a7e}
+.hidden{display:none!important}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:120;background:#0b0d0f;border:1px solid #7b8287;padding:12px 16px;box-shadow:0 12px 40px #000;max-width:min(90vw,650px);text-align:center}
+.modal{position:fixed;inset:0;z-index:110;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center;padding:18px}
+.modalbox{width:min(720px,94vw);max-height:85vh;overflow:auto;background:#080a0b;border:2px solid #747a7e;box-shadow:0 20px 90px #000;padding:18px}
+.modalClose{float:right}
+.admin{position:fixed;z-index:105;left:30px;top:70px;width:420px;height:620px;min-width:290px;min-height:320px;max-width:calc(100vw - 20px);max-height:calc(100vh - 20px);background:#080a0b;border:2px solid #8a9094;box-shadow:0 20px 90px #000;overflow:hidden}
+.adminHead{height:42px;padding:10px 12px;background:#171a1c;border-bottom:1px solid #62686d;cursor:move;display:flex;justify-content:space-between;user-select:none;touch-action:none}
+.adminBody{height:calc(100% - 42px);overflow:auto;padding:12px}
+.resize{position:absolute;right:2px;bottom:2px;width:22px;height:22px;cursor:nwse-resize;background:linear-gradient(135deg,transparent 45%,#777 46% 52%,transparent 53%),linear-gradient(135deg,transparent 60%,#777 61% 67%,transparent 68%)}
+.admin .panel{border:1px solid #4c5358;padding:11px;margin-bottom:10px;background:linear-gradient(180deg,#0b0d0f,#070809);box-shadow:inset 0 0 18px #000}.admin .panel>b{display:block;color:#e0e3e5;letter-spacing:1px}.admin button{min-height:38px}.admin input{width:100%;background:#020303;color:#e6e8e9;border:1px solid #686e73;padding:10px;margin-top:8px}
+.row{display:flex;gap:7px;flex-wrap:wrap}
+.small{font-size:11px}
+@media(max-width:650px){
+ #tv{padding:5px}.screen{padding:9px;min-height:680px}.clue{font-size:15px}
+ .admin{left:10px;top:55px;width:calc(100vw - 20px);height:70vh}
+}
+
+.adminStatus{display:flex;justify-content:space-between;border:1px solid #4c5358;padding:8px 10px;margin-bottom:10px;color:#bfc3c6;font-size:12px;letter-spacing:1px}.adminStatus span:first-child{color:#dfe3e5}.resize{position:absolute;right:2px;bottom:2px;width:22px;height:22px;cursor:nwse-resize;background:linear-gradient(135deg,transparent 0 45%,#777 46% 50%,transparent 51% 60%,#aaa 61% 65%,transparent 66%)}#logo{cursor:pointer;user-select:none}.modalbox input{margin-top:10px}
+
+.secret-glitch #tv{animation:secretShake .16s steps(2) infinite;filter:contrast(1.35) saturate(.7)}
+.secret-glitch .screen{box-shadow:inset 0 0 55px #fff1,0 0 35px #7773}
+.secret-glitch .bar{filter:brightness(2)}
+.secret-night{background:#010203!important}
+.secret-night #tv{filter:brightness(.72) contrast(1.25)}
+.secret-night .logo:after{content:' // NIGHT CHANNEL';font-size:9px;color:#777;letter-spacing:2px}
+@keyframes secretShake{0%{transform:translate(0)}50%{transform:translate(1px,-1px)}100%{transform:translate(-1px,1px)}}
+
+.error404{position:relative;padding:24px;border:2px solid #777;background:repeating-linear-gradient(0deg,#080909 0,#080909 2px,#101214 3px,#080909 5px);box-shadow:inset 0 0 45px #000,0 0 30px #000;text-align:center;overflow:hidden}.errorNoise{font:11px monospace;letter-spacing:4px;color:#777;margin-bottom:18px}.errorCode{font:900 76px monospace;letter-spacing:8px;text-shadow:3px 0 #555,-3px 0 #222;animation:errorJitter 1.2s infinite}.errorTitle{font:20px monospace;letter-spacing:5px;margin:10px 0}.errorLine{font:11px monospace;color:#777;border:1px solid #333;padding:8px;margin:16px 0}.errorPulse{font:10px monospace;color:#aaa;letter-spacing:3px}.finalQuestionCard,.contactFinal{position:relative;border:1px solid #60666b;padding:20px;background:linear-gradient(180deg,#101315,#050607);box-shadow:inset 0 0 35px #000}.finalGlitch,.contactBadge{font:10px monospace;letter-spacing:3px;color:#8b9195;margin-bottom:16px}.finalClose{position:absolute;right:8px;top:8px;width:36px;height:36px;border:1px solid #777;background:#0b0d0e;color:#eee;font-size:24px;cursor:pointer}.whatsappLine{font-size:24px;letter-spacing:1px;border:1px solid #555;padding:18px;margin-top:20px}.admin{border-radius:4px;background:linear-gradient(145deg,#090b0c,#050607);backdrop-filter:blur(8px)}.adminHead{box-shadow:inset 0 -1px 0 #333,0 3px 15px #000;cursor:grab}.adminHead:active{cursor:grabbing}.admin .panel{border-radius:3px}.admin .panel:hover{border-color:#777;box-shadow:inset 0 0 20px #000,0 0 10px #111}.admin button{transition:transform .08s,filter .15s}.admin button:hover{filter:brightness(1.25);transform:translateY(-1px)}@keyframes errorJitter{0%,90%,100%{transform:translateX(0)}92%{transform:translateX(-4px)}94%{transform:translateX(5px)}96%{transform:translateX(-2px)}}
+</style>
+</head>
+<body>
+<div id="tv">
+ <div class="shell">
+  <div class="top">
+   <div id="logo" class="logo">▣ TV.PIPICORNI.TO</div>
+   <div class="badge">V10 // 2500 TRANSMISSIONS // ANALOG NETWORK</div>
+  </div>
+  <div class="screen">
+   <div class="osd"><span id="osd">NO SIGNAL</span><span id="clock"></span></div>
+   <div class="progress"><div class="bar" id="bar"></div></div>
+   <div id="content"></div>
+  </div>
+  <div class="footer"><span>NO PREVIOUS · NO HINT · NO NEXT</span><span class="social">TikTok: @pipi_corni</span><span>THE SIGNAL IS NOT THE SCREEN</span></div>
+ </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<div id="admin" class="admin hidden">
+ <div class="adminHead" id="adminHead"><b>TV CONTROL / ADMIN</b><span class="small">DRAG · RESIZE · SESSION</span></div>
+ <div class="resize" id="resize" title="Resize"></div>
+ <div class="adminBody">
+  <div class="adminStatus"><span>● ADMIN ONLINE</span><span id="adminLevel">CH 001</span></div>
+  <div class="panel"><b>TELEPORT / NAVIGATION</b><div class="actions">
+   <button onclick="jump(-25)">−25</button><button onclick="jump(-5)">−5</button><button onclick="jump(-1)">−1</button><button onclick="jump(1)">+1</button><button onclick="jump(5)">+5</button><button onclick="jump(25)">+25</button><button onclick="jump(100)">+100</button><button onclick="jump(250)">+250</button>
+  </div><input id="jumpInput" type="number" min="1" max="2500" placeholder="LEVEL 1–2500"><div class="actions"><button onclick="jumpToInput()">GO</button><button onclick="goRandom()">RANDOM</button><button onclick="go404()">CH 404</button><button onclick="current=2500;render();syncAdmin()">CH 2500</button></div></div>
+  <div class="panel"><b>PUZZLE CONTROL</b><div class="actions"><button onclick="showAdminAnswer()">REVEAL ANSWER</button><button onclick="hideAdminAnswer()">HIDE</button></div><div id="adminAnswer" class="msg"></div><div class="actions"><button onclick="changeAnswer()">CHANGE ANSWER</button><button onclick="changeQuestion()">CHANGE QUESTION</button></div></div>
+  <div class="panel"><b>AUDIO LAB</b><div class="actions"><button onclick="playTone(440)">440 HZ</button><button onclick="playTone(880)">880 HZ</button><button onclick="playMorse(getLevel(current).answer)">MORSE</button><button onclick="playDTMF(String(current))">DTMF</button><button onclick="playRhythm()">RHYTHM</button><button onclick="playForCurrent()">AUTO SCAN</button></div></div>
+  <div class="panel"><b>DISPLAY / ENDINGS</b><div class="actions"><button onclick="render()">REFRESH</button><button onclick="openVisual()">OPEN FRAME</button><button onclick="showExtraction()">EXTRACTION</button><button onclick="final404()">OPEN 404</button><button onclick="finalQuestion()">FINAL QUESTION</button></div></div>
+  <div class="panel"><b>SECRETS</b><div class="actions"><button onclick="secretGlitch()">GLITCH</button><button onclick="secretNight()">NIGHT</button><button onclick="showToast('EASTER EGG // PIPICORNI')">PIPICORNI</button></div></div>
+  <div class="panel"><b>SESSION</b><div class="actions"><button onclick="resetOverrides()">RESET OVERRIDES</button><button onclick="closeAdmin()">LOCK ADMIN</button></div><div id="adminLog" class="dim">Admin unlock is session-only · 2500 CHANNELS ONLINE.</div></div>
+ </div>
+</div>
+<div id="unlock" class="modal hidden"><div class="modalbox"><button class="modalClose" onclick="closeUnlock()">× CLOSE</button><h2>ADMIN ACCESS</h2><p class="dim">ENTER AUTHORIZATION CODE</p><input id="adminCodeInput" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ILIYA.PIPICORNI.ADMIN.PANEL.1111"><div class="actions"><button onclick="submitAdminCode()">UNLOCK</button></div><div id="unlockMsg" class="msg"></div></div></div>
+<div id="modal" class="modal hidden"><div class="modalbox"><button class="modalClose" onclick="closeModal()">× CLOSE</button><div id="modalContent" style="clear:both;padding-top:12px"></div></div></div>
+
+<script>
+"use strict";
+
+const TOTAL=2500;
+const TARGET="PIPICORNI";
+const FINAL_ANSWER="THE.FILES.OF.PIPI.CORNI.ARE.DELETED";
+const FINAL_QUESTION_ANSWER="BRAINROT";
+const EXTRACTION_TOTAL=2499;
+const EXTRACTION_SLOTS=[1,2,3,4,5,6,7,8,9];
+let current=1, audioCtx=null, toastTimer=null;
+const overrides={answers:{},questions:{}};
+
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;",'\'':"&#39;"}[c]));}
+function hash(n){let x=(n*1103515245+12345)>>>0; x^=x>>>16; x=Math.imul(x,2246822519)>>>0; x^=x>>>13; return x>>>0;}
+function hash2(n){let x=(hash(n)^0x9e3779b9)>>>0; x=Math.imul(x^x>>>15,2246822519)>>>0; x=Math.imul(x^x>>>13,3266489917)>>>0; return (x^x>>>16)>>>0;}
+function rot(s,k){return s.replace(/[A-Z]/g,c=>String.fromCharCode(65+(c.charCodeAt(0)-65+k)%26));}
+function reverse(s){return [...s].reverse().join("");}
+function bin(n){return (n>>>0).toString(2).padStart(8,'0');}
+function hex(n){return (n>>>0).toString(16).toUpperCase();}
+function primeCount(n){let c=0;for(let x=2;x<=n;x++){let p=true;for(let j=2;j*j<=x;j++)if(x%j===0){p=false;break}if(p)c++;}return c;}
+function b64(s){return btoa(unescape(encodeURIComponent(s)));}
+function xorHex(a,b){return ((parseInt(a,16)^parseInt(b,16))>>>0).toString(16).toUpperCase().padStart(Math.max(a.length,b.length),'0');}
+function gcd(a,b){while(b){[a,b]=[b,a%b]}return Math.abs(a)}
+function egcd(a,b){let x0=1,y0=0,x1=0,y1=1;while(b){let q=Math.floor(a/b);[a,b]=[b,a%b];[x0,x1]=[x1,x0-q*x1];[y0,y1]=[y1,y0-q*y1]}return [a,x0,y0]}
+function modInv(a,m){a=((a%m)+m)%m;const [g,x]=egcd(a,m);return g===1?((x%m)+m)%m:null}
+function fib(n){let a=0,b=1;for(let i=0;i<n;i++) [a,b]=[b,a+b];return a}
+function collatz(n){let c=0;while(n!==1&&c<10000){n=n%2===0?n/2:3*n+1;c++}return c}
+function digitSum(n){return String(Math.abs(n)).split('').reduce((a,c)=>a+Number(c),0)}
+function caesarDecode(s,k){return rot(s,26-(k%26));}
+function morseEncode(s){const M={A:'.-',B:'-...',C:'-.-.',D:'-..',E:'.',F:'..-.',G:'--.',H:'....',I:'..',J:'.---',K:'-.-',L:'.-..',M:'--',N:'-.',O:'---',P:'.--.',Q:'--.-',R:'.-.',S:'...',T:'-',U:'..-',V:'...-',W:'.--',X:'-..-',Y:'-.--',Z:'--..','0':'-----','1':'.----','2':'..---','3':'...--','4':'....-','5':'.....','6':'-....','7':'--...','8':'---..','9':'----.'};return [...s].map(c=>M[c]||'/').join(' ')}
+const WORDS=["STATIC","PHANTOM","TELEVISION","TRANSMISSION","FREQUENCY","SIGNAL","ARCHIVE","RECEIVER","TELETEXT","PIXEL","CHANNEL","ANALOG","BRAINROT","CORNI","PIPICORNI","WHATSAPP","VHS","CASSETTE","NOISE","MONITOR","FRAME","NETWORK","SCANNER","SPECTRUM","TERMINAL","ECHO","GLITCH","CIRCUIT","MEMORY","DECODE"];
+const KEYS="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+function channelKey(n){
+  const idx=EXTRACTION_SLOTS.indexOf(n);
+  if(idx!==-1) return TARGET[idx];
+  return KEYS[hash2(n)%KEYS.length];
+}
+function answerWithKey(n,payload){return channelKey(n)+String(payload)}
+
+function makePuzzle(n){
+ const h=hash(n), q=h%24;
+ switch(q){
+  case 0:{
+   const a=2+h%14,d=2+h%11,k=3+h%5; const seq=[]; for(let i=0;i<k;i++)seq.push(a+i*d+i*(i-1)/2); const x= a+k*d+k*(k-1)/2; return {title:'SECOND-ORDER SEQUENCE',kind:'MATH / SERIES',q:`A sequence changes its difference by +1 each step.\nFirst terms: ${seq.join(', ')}, ?\nWhat is the next term?`,a:String(x),why:'second-order difference'};
+  }
+  case 1:{
+   const w=WORDS[h%WORDS.length], a=5+h%20,b=7+h%17; const enc=[...w].map((c,i)=>String.fromCharCode(65+(a*(c.charCodeAt(0)-65)+b+i)%26)).join('');
+   return {title:'AFFINE + POSITION CIPHER',kind:'CIPHER',q:`Alphabet = A0…Z25.\nCipher rule: C = (${a}·P + ${b} + position) mod 26.\nPosition starts at 0.\nCiphertext: ${enc}\nRecover the plaintext.`,a:w,why:'affine cipher with index drift'};
+  }
+  case 2:{
+   const n=32+(h%220), mask=17+(hash2(n)%180); const v=(n^mask)>>>0; return {title:'BINARY XOR LOCK',kind:'BINARY',q:`Convert both to binary, XOR bit-by-bit, then convert back to decimal.\nN = ${n}\nMASK = ${mask}\nResult = ?`,a:String(v),why:'binary XOR'};
+  }
+  case 3:{
+   const n=0x1200+(h%0x2FFF), sh=1+(hash2(n)%7); const v=((n<<sh)|(n>>>(16-sh)))&0xFFFF; return {title:'16-BIT ROTATION',kind:'HEX / BITWISE',q:`Treat the value as an unsigned 16-bit integer.\nHEX: 0x${hex(n).padStart(4,'0')}\nRotate LEFT by ${sh} bits.\nReturn decimal.`,a:String(v),why:'16-bit circular rotation'};
+  }
+  case 4:{
+   const w=WORDS[h%WORDS.length]; return {title:'MORSE WITH GAPS',kind:'MORSE',q:`Decode the Morse transmission.\nEach slash = a space; double spaces separate decoys.\n${morseEncode(w).replaceAll(' ','  ')}`,a:w,why:'Morse decoding'};
+  }
+  case 5:{
+   const n=70+(h%130); return {title:'PRIME COUNT',kind:'NUMBER THEORY',q:`How many primes are ≤ ${n}?\nDo not count 1.`,a:String(primeCount(n)),why:'prime enumeration'};
+  }
+  case 6:{
+   const w=WORDS[h%WORDS.length]; const mix=[...w].map((c,i)=>c+(i%2?'X':'' )).join(''); return {title:'NOISE INTERLEAVE',kind:'REVERSE / FILTER',q:`A clean word was interleaved with decoy X characters after every odd-position letter.\nSignal: ${reverse(mix)}\nReverse it, remove the decoys, recover the word.`,a:w,why:'reverse then filter'};
+  }
+  case 7:{
+   const w=WORDS[(h>>>4)%WORDS.length], key=WORDS[(h>>>10)%WORDS.length].slice(0,3), enc=[...w].map((c,i)=>String.fromCharCode(65+((c.charCodeAt(0)-65)+(key.charCodeAt(i%key.length)-65))%26)).join('');
+   return {title:'VIGENÈRE-3',kind:'POLYALPHABETIC',q:`Vigenère, A=0.\nKEY = ${key}\nCIPHERTEXT = ${enc}\nDecrypt it.`,a:w,why:'Vigenère subtraction'};
+  }
+  case 8:{
+   const w=WORDS[(h>>>3)%WORDS.length], twice=b64(b64(w)); return {title:'BASE64 DOUBLE WRAP',kind:'ENCODING',q:`Decode Base64 TWICE.\nPayload:\n${twice}`,a:w,why:'nested Base64'};
+  }
+  case 9:{
+   const a=5+(h%11), e=3+(h%9), m=97+(hash2(h)%70); return {title:'MODULAR POWER',kind:'MOD ARITHMETIC',q:`Compute ${a}^${e} mod ${m}.\nReturn the least non-negative residue.`,a:String((a**e)%m),why:'modular exponentiation'};
+  }
+  case 10:{
+   const m=17+(h%19), a=5+(hash2(h)%m-1), k=3+(h%10), x=1+(hash2(n)%m); const rhs=(a*x+k)%m; const inv=modInv(a,m); const ans=inv===null?x:((rhs-k+ m)%m*inv)%m; return {title:'LINEAR CONGRUENCE',kind:'ALGEBRA',q:`Find x in 0…${m-1}.\n${a}·x + ${k} ≡ ${rhs} (mod ${m})`,a:String(ans),why:'modular inverse'};
+  }
+  case 11:{
+   const n=8+(h%10); const a=fib(n), b=fib(n+2), c=fib(n+5); return {title:'FIBONACCI CROSSCHECK',kind:'SEQUENCE',q:`Fibonacci starts 0,1.\nCompute (F${n} × F${n+2}) − F${n+5}.`,a:String(a*b-c),why:'Fibonacci identities'};
+  }
+  case 12:{
+   const w=WORDS[(h>>>8)%WORDS.length]; const sum=[...w].reduce((s,c)=>s+c.charCodeAt(0),0); return {title:'ASCII WEIGHT',kind:'ASCII',q:`Add the decimal ASCII codes of every letter in:\n${w}\nWhat is the sum?`,a:String(sum),why:'ASCII arithmetic'};
+  }
+  case 13:{
+   const n=200+(h%700), s=String(n).split('').map(Number), alt=s.reduce((v,d,i)=>v+(i%2===0?d:-d),0); return {title:'DIGIT CHECKSUM',kind:'CHECKSUM',q:`Read ${n} left-to-right.\nAdd digits in positions 1,3,5… and subtract digits in positions 2,4,6…\nResult?`,a:String(alt),why:'alternating digit sum'};
+  }
+  case 14:{
+   const a=2+h%15,b=3+(h>>>4)%13,c=1+(h>>>8)%12,d=4+(h>>>12)%14; return {title:'2×2 DETERMINANT',kind:'LINEAR ALGEBRA',q:`Find det([[${a}, ${b}], [${c}, ${d}]]) = ?`,a:String(a*d-b*c),why:'ad-bc'};
+  }
+  case 15:{
+   const w=WORDS[h%WORDS.length], sh=1+h%5, enc=rot(w,sh); return {title:'ROTATION WITHOUT KEY',kind:'CIPHER',q:`The clue was shifted forward.\nCipher: ${enc}\nRotation: ${sh}\nDecode to the original word.`,a:w,why:'Caesar rotation'};
+  }
+  case 16:{
+   const a=hex(0x1000+(h%0x7000)).padStart(4,'0'), b=hex(0x0800+(hash2(h)%0x6000)).padStart(4,'0'); return {title:'HEX XOR',kind:'BITWISE',q:`XOR these unsigned hexadecimal values, then return HEX.\n0x${a}\n0x${b}`,a:xorHex(a,b),why:'hexadecimal XOR'};
+  }
+  case 17:{
+   const n=15+(h%20); return {title:'COLLATZ TRACE',kind:'ITERATION',q:`Start at ${n}.\nIf even: n/2. If odd: 3n+1.\nHow many transformations until the sequence reaches 1?`,a:String(collatz(n)),why:'Collatz iteration count'};
+  }
+  case 18:{
+   const P=[5,7,11][h%3], Q=[13,17,19][hash2(h)%3], x=2+(h%P); const a=x%P,b=x%Q; return {title:'CRT RECONSTRUCTION',kind:'NUMBER THEORY',q:`Find the smallest positive x such that:\nx ≡ ${a} (mod ${P})\nx ≡ ${b} (mod ${Q})\nThe two moduli are coprime.`,a:String(x),why:'Chinese remainder theorem'};
+  }
+  case 19:{
+   const w=WORDS[(h>>>6)%WORDS.length], cut=1+(h%Math.max(2,w.length-1)); const clue=w.slice(cut)+w.slice(0,cut); return {title:'CYCLIC ANAGRAM',kind:'WORD LOGIC',q:`The word was rotated left by ${cut}.\nMixed signal: ${clue}\nRecover the original.`,a:w,why:'cyclic rotation'};
+  }
+  case 20:{
+   const a=2+(h%9), b=3+(hash2(h)%8), c=5+(hash2(h>>>2)%11); const v=a*a+b*b-c; return {title:'SQUARE / OFFSET',kind:'MATH',q:`Compute (${a}² + ${b}²) − ${c}.`,a:String(v),why:'compound arithmetic'};
+  }
+  case 21:{
+   const w=WORDS[(h>>>2)%WORDS.length], sum=[...w].reduce((s,c,i)=>s+(c.charCodeAt(0)-64)*(i+1),0); return {title:'POSITIONAL LETTER SUM',kind:'TEXT MATH',q:`A=1…Z=26. Multiply each letter value by its 1-based position, then add.\nWORD = ${w}`,a:String(sum),why:'weighted letter sum'};
+  }
+  case 22:{
+   const n=120+(h%500); const r=Math.floor(Math.sqrt(n)); return {title:'FLOOR ROOT TRAP',kind:'MATH',q:`Find floor(√${n}).\nDo not round to nearest.`,a:String(r),why:'integer square root'};
+  }
+  default:{
+   const a=2+(h%8), b=4+(hash2(h)%9), c=1+(hash2(h>>>4)%7), n=6+(h%5); let v=a; for(let i=0;i<n;i++) v=v*b+c; return {title:'ITERATIVE RECURRENCE',kind:'MATH / LOOP',q:`Start x=${a}. Repeat ${n} times:\nx ← (${b}×x)+${c}\nFinal x?`,a:String(v),why:'repeated recurrence'};
+  }
+ }
+}
+
+function makeLevel(n){
+ if(n===999){return {title:'CHANNEL 0999 — TERMINAL KEY',kind:'FINAL KEY',clue:'The transmission is almost complete. Enter the recovered name exactly.\n\nTikTok: @pipi_corni',answer:'PIPICORNI',why:'terminal key',type:99};}
+ if(n===1000){return {title:'CHANNEL 1000 — PIPICORNI',kind:'TERMINAL KEY',clue:'The signal has locked onto the final name.\n\nEnter the transmission key exactly.\n\nTikTok: @pipi_corni',answer:'PIPICORNI',why:'terminal key',type:100};}
+ if(n===2500){
+  return {title:'CHANNEL 2500 — ARCHIVE FAILURE',kind:'ULTIMATE END',clue:`THE FINAL ARCHIVE\n\nA second copy of the archive has been found. The files are marked for deletion.\n\nFINAL FILE QUERY:\nWhat exact sentence is written in the deletion log?\n\nEnter the complete answer exactly, including the dots.\n\nTikTok: @pipi_corni`,answer:FINAL_ANSWER,why:'final deletion log',type:250};
+ }
+ const p=makePuzzle(n);
+ return {title:`CHANNEL ${String(n).padStart(4,'0')} — ${p.title}`,kind:p.kind,clue:p.q+`\n\nARCHIVE NOTE: first character/number of this answer is part of the long-range signal.\n\nTikTok: @pipi_corni`,answer:answerWithKey(n,p.a),why:p.why,type:p.type};
+}
+function canonicalLevel(n){return makeLevel(n)}
+function getLevel(n){
+ let L=makeLevel(n);
+ if(overrides.answers[n]!=null)L.answer=overrides.answers[n];
+ if(overrides.questions[n]!=null)L.clue=overrides.questions[n];
+ return L;
+}
+
+function artFor(n,L){
+ const h=hash(n), target=String(L.answer).toUpperCase();
+ const shown=(n%5===0)?reverse(target):(n%5===1?L.why.toUpperCase():(n%5===2?target.split('').join(' · '):'SCAN / READ / VERIFY'));
+ const dots=Array.from({length:70},(_,i)=>`<rect x="${(h+i*83)%900}" y="${(h+i*47)%210}" width="${2+(i%4)}" height="${2+(i%3)}" fill="#8f9498" opacity="${.12+(i%6)*.06}"/>`).join('');
+ const key=channelKey(n);
+ return `<svg viewBox="0 0 1000 260" xmlns="http://www.w3.org/2000/svg" aria-label="CRT puzzle image">
+ <rect width="1000" height="260" fill="#020303"/><g>${dots}</g>
+ <path d="M20 ${60+h%110} C240 ${20+h%160},430 ${190-h%120},690 ${70+h%100} S900 ${100+h%90},980 ${50+h%140}" fill="none" stroke="#9da2a5" opacity=".45"/>
+ <rect x="45" y="55" width="910" height="135" fill="#080a0b" stroke="#666c70"/>
+ <text x="70" y="80" fill="#777e83" font-family="monospace" font-size="12">CHANNEL ${String(n).padStart(4,'0')} // EXTREME SIGNAL</text>
+ <text x="70" y="105" fill="#bfc3c6" font-family="monospace" font-size="12">KEY CHARACTER: ${esc(key)}</text>
+ <text x="500" y="145" text-anchor="middle" fill="#d7dadd" font-family="monospace" font-size="24" letter-spacing="4">${esc(shown)}</text>
+ <text x="500" y="171" text-anchor="middle" fill="#777e83" font-family="monospace" font-size="10">VISUAL LAYER // INSPECT EVERYTHING</text>
+ </svg>`;
+}
+
+function render(){
+ const L=getLevel(current);
+ document.getElementById('osd').innerHTML=`CH ${String(current).padStart(4,'0')} / ${TOTAL} <span style="color:#777">EXTREME MODE</span>`;
+ document.getElementById('clock').textContent=new Date().toLocaleTimeString();
+ document.getElementById('bar').style.width=(current/TOTAL*100)+'%';
+ document.getElementById('content').innerHTML=`
+ <div class="card">
+  <div class="kind">${esc(L.kind)}</div>
+  <h1>${esc(L.title)}</h1>
+  <div class="clue">${esc(L.clue)}</div>
+  <div class="art">${artFor(current,L)}</div>
+  <div class="actions"><button onclick="check()">TRANSMIT</button><button onclick="playForCurrent()">AUDIO</button><button onclick="openVisual()">ZOOM IMAGE</button></div>
+  <div style="margin-top:10px"><input id="answer" class="input" autocomplete="off" autocapitalize="characters" placeholder="ENTER SIGNAL"></div>
+  <div id="msg" class="msg"></div>
+  <div class="dim">TikTok: @pipi_corni · NO HINT · THE IMAGE/AUDIO MAY CONTAIN DATA</div>
+ </div>`;
+ const answerInput=document.getElementById('answer');
+ answerInput.addEventListener('keydown',e=>{if(e.key==='Enter')check()});
+ answerInput.addEventListener('input',()=>{if(normalize(answerInput.value)===ADMIN_CODE){adminUnlocked=true;answerInput.value='';const mm=document.getElementById('msg');mm.className='msg ok';mm.textContent='ADMIN ACCESS GRANTED // CONTROL PANEL OPEN';openAdmin()}});
+}
+function normalize(s){return String(s).trim().toUpperCase().replace(/\s+/g,' ')}
+function check(){
+ const answerEl=document.getElementById('answer'), L=getLevel(current), v=normalize(answerEl.value), m=document.getElementById('msg');
+ if(v===ADMIN_CODE){adminUnlocked=true;answerEl.value='';m.className='msg ok';m.textContent='ADMIN ACCESS GRANTED // CONTROL PANEL OPEN';openAdmin();return;}
+ if(v===normalize(L.answer)){
+   m.className='msg ok';m.textContent='SIGNAL ACCEPTED.';
+   setTimeout(()=>{if(current<TOTAL){current++;render()}else final404()},500);
+ }else{m.className='msg bad';m.textContent='SIGNAL REJECTED. THE CRT IS LYING TO YOU.'}
+}
+function adminSkip(n){if(!adminUnlocked)return;current=Math.min(TOTAL,current+n);render();syncAdmin();showToast('ADMIN // SKIPPED '+n+' LEVEL'+(n===1?'':'S'))}
+function adminBack(n){if(!adminUnlocked)return;current=Math.max(1,current-n);render();syncAdmin();showToast('ADMIN // BACK '+n+' LEVEL'+(n===1?'':'S'))}
+function jump(d){current=Math.max(1,Math.min(TOTAL,current+d));render();syncAdmin()}
+function jumpToInput(){const n=+document.getElementById('jumpInput').value;if(n>=1&&n<=TOTAL){current=n;render();syncAdmin()}}
+function goRandom(){current=1+Math.floor(Math.random()*TOTAL);render();syncAdmin()}
+function go404(){current=404;render();syncAdmin();showToast('CHANNEL 404 // BRAINROT')}
+function resetOverrides(){overrides.answers={};overrides.questions={};render();showToast('SESSION OVERRIDES RESET')}
+function syncAdmin(){const el=document.getElementById('adminLevel');if(el)el.textContent='CH '+String(current).padStart(4,'0')}
+function showToast(t){const x=document.getElementById('toast');x.textContent=t;x.classList.remove('hidden');clearTimeout(toastTimer);toastTimer=setTimeout(()=>x.classList.add('hidden'),4500)}
+function closeModal(){document.getElementById('modal').classList.add('hidden')}
+function openVisual(){const L=getLevel(current);document.getElementById('modalContent').innerHTML=`<h2>FRAME ${String(current).padStart(4,'0')}</h2><div class="art">${artFor(current,L)}</div><p class="dim">Inspect text, spacing, symbols, the key character, scanlines, coordinates and the visual trace. Some frames contain deliberate decoys. TikTok: @pipi_corni</p>`;document.getElementById('modal').classList.remove('hidden')}
+
+function audio(){if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();return audioCtx}
+function beep(freq,dur,when=0,type='sine',gain=.06){const c=audio(),o=c.createOscillator(),g=c.createGain(),t=c.currentTime+when;o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(gain,t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g).connect(c.destination);o.start(t);o.stop(t+dur+.02)}
+function playTone(f=440){beep(f,.45,0,'sine',.08);showToast('AUDIO // TONE')}
+function playMorse(text){const M={A:'.-',B:'-...',C:'-.-.',D:'-..',E:'.',F:'..-.',G:'--.',H:'....',I:'..',J:'.---',K:'-.-',L:'.-..',M:'--',N:'-.',O:'---',P:'.--.',Q:'--.-',R:'.-.',S:'...',T:'-',U:'..-',V:'...-',W:'.--',X:'-..-',Y:'-.--',Z:'--..','0':'-----','1':'.----','2':'..---','3':'...--','4':'....-','5':'.....','6':'-....','7':'--...','8':'---..','9':'----.'};let t=0;for(const ch of text.toUpperCase()){if(ch===' '){t+=.35;continue}for(const s of (M[ch]||'')){beep(640,s==='.'?.10:.30,t,'square',.05);t+=s==='.'?.14:.34}t+=.16}showToast('AUDIO // MORSE TRANSMISSION')}
+function playDTMF(text){const D={'1':[697,1209],'2':[697,1336],'3':[697,1477],'4':[770,1209],'5':[770,1336],'6':[770,1477],'7':[852,1209],'8':[852,1336],'9':[852,1477],'0':[941,1336]};let t=0;for(const ch of text){if(D[ch]){beep(D[ch][0],.18,t,'sine',.04);beep(D[ch][1],.18,t,'sine',.04);t+=.28}}showToast('AUDIO // DTMF')}
+function playRhythm(){for(let i=0;i<16;i++)beep(i%4===0?330:660,.09,i*.13,'square',.045);showToast('AUDIO // RHYTHM')}
+function playForCurrent(){const L=getLevel(current);if(current%5===0)playDTMF(String(current));else if(L.answer.length<14)playMorse(L.answer);else playTone(180+(hash(current)%900))}
+
+function showAdminAnswer(){document.getElementById('adminAnswer').textContent='ANSWER: '+getLevel(current).answer}
+function hideAdminAnswer(){document.getElementById('adminAnswer').textContent=''}
+function changeAnswer(){const v=prompt('SESSION ANSWER — current level');if(v!==null&&v.trim()){overrides.answers[current]=v.trim();render();showToast('ANSWER OVERRIDE SAVED FOR THIS SESSION')}}
+function changeQuestion(){const v=prompt('SESSION QUESTION / CLUE — current level');if(v!==null&&v.trim()){overrides.questions[current]=v.trim();render();showToast('QUESTION OVERRIDE SAVED FOR THIS SESSION')}}
+function showExtraction(){
+ let stream='';for(let i=1;i<=EXTRACTION_TOTAL;i++)stream+=String(canonicalLevel(i).answer).charAt(0);
+ const picked=EXTRACTION_SLOTS.map(p=>stream.charAt(p-1)).join('');
+ document.getElementById('adminLog').innerHTML=`ARCHIVE STREAM: ${stream.length} CHARS<br>SELECTED POSITIONS: ${EXTRACTION_SLOTS.join(', ')}<br><b>RECOVERED: ${esc(picked)}</b>`;
+}
+function showFinal404(){document.getElementById('adminLog').textContent='404 ACCESS: locate the displaced pixel in the CRT image.';final404()}
+function final404(){
+ document.getElementById('modalContent').innerHTML=`
+ <div class="error404">
+  <div class="errorNoise">▒▒▒ SIGNAL CORRUPTED ▒▒▒</div>
+  <div class="errorCode">ERROR 404</div>
+  <div class="errorTitle">FILE NOT FOUND</div>
+  <div class="errorLine">/archive/pipi-corni/final/channel_2500</div>
+  <p>The final archive returned an empty response.</p>
+  <div class="errorPulse">NO SIGNAL // NO FILE // NO RETURN</div>
+  <div class="actions"><button onclick="finalQuestion()">ANSWER</button></div>
+ </div>`;
+ document.getElementById('modal').classList.remove('hidden');
+ playTone(110); setTimeout(()=>playTone(55),180);
+}
+function finalQuestion(){
+ document.getElementById('modalContent').innerHTML=`
+ <h2>FINAL QUESTION</h2>
+ <div class="finalQuestionCard">
+  <div class="finalGlitch">ARCHIVE // 2500 // LAST QUERY</div>
+  <p style="font-size:22px"><b>What is Pipi Corni?</b></p>
+  <p class="dim">Enter your answer. No hint available.</p>
+  <input id="finalAnswer" class="input" autocomplete="off" placeholder="ENTER FINAL ANSWER">
+  <div class="actions"><button onclick="submitFinalAnswer()">SUBMIT</button></div>
+  <div id="finalMsg" class="msg"></div>
+  <p class="dim">TikTok: @pipi_corni</p>
+ </div>`;
+ document.getElementById('modal').classList.remove('hidden');
+ setTimeout(()=>document.getElementById('finalAnswer').focus(),50);
+ document.getElementById('finalAnswer').addEventListener('keydown',e=>{if(e.key==='Enter')submitFinalAnswer()});
+ playMorse('PIPICORNI');
+}
+function submitFinalAnswer(){
+ const el=document.getElementById('finalAnswer'),m=document.getElementById('finalMsg');
+ if(normalize(el.value)===FINAL_QUESTION_ANSWER){finalContact()}
+ else{m.className='msg bad';m.textContent='WRONG FINAL SIGNAL.';el.select();playTone(90)}
+}
+function finalContact(){
+ document.getElementById('modalContent').innerHTML=`
+ <div class="contactFinal">
+  <button class="finalClose" onclick="closeModal()" aria-label="Close">×</button>
+  <div class="contactBadge">TRANSMISSION COMPLETE</div>
+  <h2>ARCHIVE CLOSED</h2>
+  <p class="whatsappLine">WhatsApp: <b>@pipicorni</b></p>
+  <p class="dim">The last file has been recovered.</p>
+ </div>`;
+ playTone(880); setTimeout(()=>playTone(1320),140); showToast('TRANSMISSION // COMPLETE');
+}
+
+
+let adminUnlocked=false;
+function openAdmin(){if(!adminUnlocked){openUnlock();return}document.getElementById('admin').classList.remove('hidden');syncAdmin();showToast('ADMIN // ACCESS GRANTED')}
+function closeAdmin(){document.getElementById('admin').classList.add('hidden')}
+function openUnlock(){document.getElementById('unlock').classList.remove('hidden');setTimeout(()=>document.getElementById('adminCodeInput').focus(),60)}
+function closeUnlock(){document.getElementById('unlock').classList.add('hidden');document.getElementById('unlockMsg').textContent=''}
+function unlockAdmin(){adminUnlocked=true;closeUnlock();document.getElementById('admin').classList.remove('hidden');syncAdmin();showToast('ADMIN // ACCESS GRANTED')}
+function submitAdminCode(){const v=normalize(document.getElementById('adminCodeInput').value);if(v===ADMIN_CODE)unlockAdmin();else{document.getElementById('unlockMsg').textContent='ACCESS DENIED // INVALID CODE';document.getElementById('adminCodeInput').select()}}
+/* SECRET / EASTER-EGG SYSTEM */
+const secretState={typed:'',glitch:false,night:false};
+function secretGlitch(){
+ secretState.glitch=!secretState.glitch;
+ document.body.classList.toggle('secret-glitch',secretState.glitch);
+ showToast(secretState.glitch?'SECRET // GLITCH CHANNEL':'GLITCH // CLOSED');
+ if(secretState.glitch) playRhythm();
+}
+function secretNight(){
+ secretState.night=!secretState.night;
+ document.body.classList.toggle('secret-night',secretState.night);
+ showToast(secretState.night?'SECRET // NIGHT TRANSMISSION':'NIGHT // CLOSED');
+}
+function checkSecretCode(){
+ const v=secretState.typed.toUpperCase();
+ if(v.endsWith('GLITCH404')){secretState.typed='';secretGlitch();return}
+ if(v.endsWith('NIGHT777')){secretState.typed='';secretNight();return}
+ if(v.endsWith('PIPICORNI'))showToast('EASTER EGG // SIGNAL IDENTIFIED');
+}
+document.addEventListener('keydown',e=>{
+ if(e.key.length===1){secretState.typed=(secretState.typed+e.key).slice(-32);checkSecretCode()}
+});
+
+function dragResize(){const a=document.getElementById('admin'),h=document.getElementById('adminHead'),r=document.getElementById('resize');let mode=null,sx=0,sy=0,sl=0,st=0,sw=0,sh=0;h.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;mode='drag';sx=e.clientX;sy=e.clientY;sl=a.offsetLeft;st=a.offsetTop;h.setPointerCapture(e.pointerId)});r.addEventListener('pointerdown',e=>{mode='resize';sx=e.clientX;sy=e.clientY;sw=a.offsetWidth;sh=a.offsetHeight;r.setPointerCapture(e.pointerId);e.preventDefault()});function move(e){if(!mode)return;if(mode==='drag'){a.style.left=Math.max(5,Math.min(window.innerWidth-a.offsetWidth-5,sl+e.clientX-sx))+'px';a.style.top=Math.max(5,Math.min(window.innerHeight-a.offsetHeight-5,st+e.clientY-sy))+'px'}else{a.style.width=Math.max(290,Math.min(window.innerWidth-10,sw+e.clientX-sx))+'px';a.style.height=Math.max(320,Math.min(window.innerHeight-10,sh+e.clientY-sy))+'px'}}function up(){mode=null}document.addEventListener('pointermove',move);document.addEventListener('pointerup',up);document.addEventListener('pointercancel',up)}
+
+dragResize();
+const ADMIN_CODE='ILIYA.PIPICORNI.ADMIN.PANEL.1111';
+let keybuf='';
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeUnlock();closeAdmin()}if(e.key.length===1){keybuf=(keybuf+e.key.toUpperCase()).slice(-ADMIN_CODE.length);if(keybuf===ADMIN_CODE){adminUnlocked=true;openAdmin();keybuf=''}}if(e.key==='Enter'&&!document.getElementById('unlock').classList.contains('hidden'))submitAdminCode()});
+let logoTaps=0,logoTimer=null;document.getElementById('logo').addEventListener('click',()=>{logoTaps++;clearTimeout(logoTimer);logoTimer=setTimeout(()=>logoTaps=0,900);if(logoTaps>=5){logoTaps=0;openUnlock()}});
+document.getElementById('admin').addEventListener('dblclick',e=>{if(e.target.id==='adminHead'&&adminUnlocked)openAdmin()});
+
+render();syncAdmin();
+setInterval(()=>{const c=document.getElementById('clock');if(c)c.textContent=new Date().toLocaleTimeString()},1000);
+</script>
+</body>
+</html>
